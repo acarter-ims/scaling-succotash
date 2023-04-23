@@ -9,7 +9,7 @@ scrape_configs:
     metrics_path: /probe
     static_configs:
       - targets:
-        - 10.125.13.30
+        - targets/iperf3-server.yml
     params:
       port: ['5201']
     relabel_configs:
@@ -18,16 +18,35 @@ scrape_configs:
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: 10.125.13.30:9579
+        replacement: 10.125.30.16:9579
 
+  - job_name: 'iperf3-probe-2'
+    metrics_path: /probe
+    static_configs:
+      - targets:
+        - targets/iperf3-client.yml
+    params:
+      port: ['5201']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.30.13:9579
 # speedtest tests
-  - job_name: 'speedtest-probe'
+  - job_name: 'speedtest-probe-1'
     metrics_path: /probe
     static_configs:
     - targets:
-      - 10.125.13.30:9516
+      - targets/speedtest1.yml
+  - job_name: 'speedtest-probe-2'
+    metrics_path: /probe
+    static_configs:
+    - targets:
+      - targets/speedtest2.yml
 # blackbox tests
-  - job_name: 'blackbox-probe-http'
+  - job_name: 'blackbox-probe-http-1'
     metrics_path: /probe
     params:
       module: [http_2xx]
@@ -40,8 +59,8 @@ scrape_configs:
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: 10.125.13.30:9115
-  - job_name: 'blackbox-probe-icmp'
+        replacement: 10.125.30.13:9116
+  - job_name: 'blackbox-probe-icmp-1'
     metrics_path: /probe
     params:
       module: [icmp_test]
@@ -54,8 +73,8 @@ scrape_configs:
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: 10.125.13.30:9116
-  - job_name: 'blackbox-probe-dns'
+        replacement: 10.125.30.13:9116
+  - job_name: 'blackbox-probe-dns-1'
     metrics_path: /probe
     params:
       module: [dns_test]
@@ -68,8 +87,8 @@ scrape_configs:
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: 10.125.13.30:9117
-  - job_name: 'blackbox-probe-http-parser'
+        replacement: 10.125.30.13:9117
+  - job_name: 'blackbox-probe-http-parser-1'
     metrics_path: /probe
     params:
       module: [http_parsing]
@@ -82,4 +101,4 @@ scrape_configs:
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: 10.125.13.30:9118
+        replacement: 10.125.30.13:9118
