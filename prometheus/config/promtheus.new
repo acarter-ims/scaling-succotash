@@ -1,84 +1,72 @@
 ---
 global:
-  scrape_interval: 5m
-  scrape_timeout: 2m
+  scrape_interval: 1m
+  scrape_timeout: 30s
 
 scrape_configs:
-# iperf3 tests
-  - job_name: 'iperf3-probe-1'
+# blackbox tests
+  - job_name: 'blackbox-probe-http-1'
     metrics_path: /probe
+    params:
+      module: [http_2xx]
     static_configs:
       - targets:
-        - 10.125.30.13
-    params:
-      port: ['5201']
+        - https://radiustoday.com
+        - https://grafana.inteleradcloud.com
+        - https://github.com
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: 10.125.30.13:9579
-  - job_name: 'iperf3-probe-2'
+        replacement: 10.125.30.13:9115
+ 
+  - job_name: 'blackbox-probe-icmp-1'
     metrics_path: /probe
-    static_configs:
-      - targets:
-        - 192.168.30.16
     params:
-      port: ['5201']
-    relabel_configs:
-      - source_labels: [__address__]
-        target_label: __param_target
-      - source_labels: [__param_target]
-        target_label: instance
-      - target_label: __address__
-        replacement: 10.125.30.13:9579 
-  - job_name: 'iperf3-probe-3'
-    metrics_path: /probe
+      module: [icmp_test]
     static_configs:
       - targets:
         - 10.0.50.61
-    params:
-      port: ['5201']
+        - 10.130.1.52
+        - github.com
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: 10.125.30.13:9579  
-  - job_name: 'iperf3-probe-4'      
+        replacement: 10.125.30.13:9116
+
+  - job_name: 'blackbox-probe-dns-1'
     metrics_path: /probe
+    params:
+      module: [dns_test]
     static_configs:
       - targets:
-        - 10.130.0.21
-    params:
-      port: ['5201']
+        - 8.8.8.8
+        - 9.9.9.9
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: 10.125.30.13:9579  
-# speedtest tests
-  - job_name: 'speedtest-probe-1'
+        replacement: 10.125.30.13:9117
+
+
+  - job_name: 'blackbox-probe-http-parser-1'
     metrics_path: /probe
+    params:
+      module: [http_parsing]
     static_configs:
-    - targets:
-      - 10.125.30.16:9516
-  - job_name: 'speedtest-probe-2'
-    metrics_path: /probe
-    static_configs:
-    - targets:
-      - 10.125.30.13:9516
-  - job_name: 'speedtest-probe-2'
-    metrics_path: /probe
-    static_configs:
-    - targets:
-      - 10.0.50.61:9516      
-  - job_name: 'speedtest-probe-2'
-    metrics_path: /probe
-    static_configs:
-    - targets:
-      - 10.130.0.21:9516   
+      - targets:
+        - https://oob.inteleradcloud.com
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.30.13:9118
