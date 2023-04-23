@@ -1,0 +1,85 @@
+---
+global:
+  scrape_interval: 5m
+  scrape_timeout: 2m
+
+scrape_configs:
+# iperf3 tests
+  - job_name: 'iperf3-probe'
+    metrics_path: /probe
+    static_configs:
+      - targets:
+        - 10.125.13.30
+    params:
+      port: ['5201']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.13.30:9579
+
+# speedtest tests
+  - job_name: 'speedtest-probe'
+    metrics_path: /probe
+    static_configs:
+    - targets:
+      - 10.125.13.30:9516
+# blackbox tests
+  - job_name: 'blackbox-probe-http'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    file_sd_configs:
+      - files:
+        - targets/http.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.13.30:9115
+  - job_name: 'blackbox-probe-icmp'
+    metrics_path: /probe
+    params:
+      module: [icmp_test]
+    file_sd_configs:
+      - files:
+        - targets/icmp.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.13.30:9116
+  - job_name: 'blackbox-probe-dns'
+    metrics_path: /probe
+    params:
+      module: [dns_test]
+    file_sd_configs:
+      - files:
+        - targets/dns.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.13.30:9117
+  - job_name: 'blackbox-probe-http-parser'
+    metrics_path: /probe
+    params:
+      module: [http_parsing]
+    file_sd_configs:
+      - files:
+        - targets/http.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.13.30:9118
