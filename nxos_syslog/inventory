@@ -1,0 +1,2 @@
+[nxos]
+dfwbdrleaf1-1 ansible_host=10.125.30.13 ansible_become=true ansible_become_password=L9C*r^v!TRAQ ansible_become_user=root ansible_ssh_pass=L9C*r^v!TRAQ ansible_network_os=nxos

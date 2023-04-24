@@ -1,0 +1,48 @@
+---
+- name: file module demo
+  hosts: nxos
+  gather_facts: no 
+  vars:
+    telegrafhost: 10.125.30.13
+    snmpv3_name: telegraf
+    snmpv3_authprot: SHA
+    snmpv3_authpw: VKNEVw$&))2^aUwuqd
+    snmpv3_privprot: AES
+    snmpv3_privpw: qhtVvKfD*be2b2Mf&*
+  tasks:
+    - name: Config 
+      nxos_config:
+        lines:
+         - 'logging server {{ telegrafhost }} 5 use-vrf management'
+         - 'logging source-interface mgmt0'
+         - 'logging message interface type ethernet description'
+    - name: Merge the provided configuration with the existing running configuration
+      cisco.nxos.nxos_snmp_server:
+       config:
+          aaa_user:
+            cache_timeout: 36000
+          communities:
+            - community: public
+              group: network-operator
+            - community: private
+              group: network-admin
+
+
+    - name: TEMPLATE OUT TELEGRAF.CONF FILE
+      template:
+        src: ./templates/nxos_snmp_telegraf.j2
+        dest: /etc/telegraf/telegraf.d/{{inventory_hostname}}_snmp.conf
+      delegate_to: "{{ telegrafhost }}"
+      notify: RELOAD TELEGRAF
+      when: ansible_network_os == 'nxos'
+
+    - name: READ LIST OF ALL TELEGRAF.CONF FILES IN DIRECTORY
+      find:
+        paths: /etc/telegraf/telegraf.d/
+        file_type: file
+        recurse: no
+        patterns: "*snmp.conf"
+      delegate_to: "{{ telegrafhost }}"
+      register: files_matched
+      run_once: true
+    
