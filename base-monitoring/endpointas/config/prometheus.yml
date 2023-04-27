@@ -1,0 +1,216 @@
+---
+global:
+  scrape_interval: 5m
+  scrape_timeout: 2m
+
+scrape_configs:
+# iperf3 tests
+  - job_name: 'iperf3-probe-1'
+    metrics_path: /probe
+    static_configs:
+      - targets:
+        - 10.0.50.61
+    params:
+      port: ['5201']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.30.16:9579
+  - job_name: 'iperf3-probe-2'
+    metrics_path: /probe
+    static_configs:
+      - targets:
+        - 10.125.30.13
+    params:
+      port: ['5201']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.30.16:9579
+# speedtest tests
+  - job_name: 'speedtest-probe-1'
+    metrics_path: /probe
+    static_configs:
+    - targets:
+      - 10.0.50.61:9516
+  - job_name: 'speedtest-probe-2'
+    metrics_path: /probe
+    static_configs:
+    - targets:
+      - 10.125.30.16:9516
+# blackbox tests
+  - job_name: 'blackbox-probe-http-1'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    file_sd_configs:
+      - files:
+        - targets/http.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.30.16:9115
+  - job_name: 'blackbox-probe-http-2'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    file_sd_configs:
+      - files:
+        - targets/http.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.30.16:9115
+  - job_name: 'blackbox-probe-http-3'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    file_sd_configs:
+      - files:
+        - targets/http.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.30.16:9115
+  - job_name: 'blackbox-probe-icmp-1'
+    metrics_path: /probe
+    params:
+      module: [icmp_test]
+    file_sd_configs:
+      - files:
+        - targets/icmp.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.30.16:9116
+  - job_name: 'blackbox-probe-icmp-2'
+    metrics_path: /probe
+    params:
+      module: [icmp_test]
+    file_sd_configs:
+      - files:
+        - targets/icmp.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.30.16:9116
+  - job_name: 'blackbox-probe-icmp-3'
+    metrics_path: /probe
+    params:
+      module: [icmp_test]
+    file_sd_configs:
+      - files:
+        - targets/icmp.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.30.16:9116
+  - job_name: 'blackbox-probe-dns-1'
+    metrics_path: /probe
+    params:
+      module: [dns_test]
+    file_sd_configs:
+      - files:
+        - targets/dns.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.30.16:9117
+  - job_name: 'blackbox-probe-dns-2'
+    metrics_path: /probe
+    params:
+      module: [dns_test]
+    file_sd_configs:
+      - files:
+        - targets/dns.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.30.16:9117
+  - job_name: 'blackbox-probe-dns-3'
+    metrics_path: /probe
+    params:
+      module: [dns_test]
+    file_sd_configs:
+      - files:
+        - targets/dns.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.30.16:9117
+  - job_name: 'blackbox-probe-http-parser-1'
+    metrics_path: /probe
+    params:
+      module: [http_parsing]
+    file_sd_configs:
+      - files:
+        - targets/http.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.30.16:9118
+  - job_name: 'blackbox-probe-http-parser-2'
+    metrics_path: /probe
+    params:
+      module: [http_parsing]
+    file_sd_configs:
+      - files:
+        - targets/http.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.30.16:9118
+  - job_name: 'blackbox-probe-http-parser-3'
+    metrics_path: /probe
+    params:
+      module: [http_parsing]
+    file_sd_configs:
+      - files:
+        - targets/http.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.125.30.16:9118
+...

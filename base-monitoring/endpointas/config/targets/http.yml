@@ -1,0 +1,5 @@
+---
+- targets:
+  - https://grafana.inteleradcloud.com
+  - https://portal.radiustoday.com
+  - https://github.com
